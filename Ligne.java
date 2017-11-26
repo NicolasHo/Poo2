@@ -9,6 +9,14 @@ class Ligne
 	public Point min;
 	public Point max;
 
+	public Ligne(Point point1, Point point2)
+	{
+		pDepart=point1;
+		pArrivee=point2;
+		min=Point.min2(pDepart,pArrivee);
+		max=Point.max2(pDepart,pArrivee);
+	}
+
 	public Ligne(Point point1, Point point2, Point t1, Point t2)
 	{
 		pDepart=point1;

@@ -12,8 +12,10 @@ public class Draw extends JPanel {
 	{
 		sh= new Vector<Shape>();
 		sh.add(s);
+		sh.elementAt(0).position.y=20;
 		sh.add(new Shape());
 		sh.elementAt(1).position.x=400;
+		sh.elementAt(1).position.y=20;
 		sh.add(new Shape());
 		sh.elementAt(2).position.y=250;
 		sh.add(new Shape());
@@ -47,6 +49,14 @@ public class Draw extends JPanel {
 				for(Ligne l : rect.ligne)
 					g.drawLine((int)(s.position.x+l.pDepart.x), (int)(s.position.y+l.pDepart.y), (int)(s.position.x+l.pArrivee.x), (int)(s.position.y+l.pArrivee.y));
 			}
+
+		    g.setColor(Color.BLUE);
+			for(Ligne l : s.top)
+				g.drawLine((int)(s.position.x+l.pDepart.x), (int)(s.position.y+l.pDepart.y-10), (int)(s.position.x+l.pArrivee.x), (int)(s.position.y+l.pArrivee.y-10));
+			
+			for(Ligne l : s.bot)
+				g.drawLine((int)(s.position.x+l.pDepart.x), (int)(s.position.y+l.pDepart.y+10), (int)(s.position.x+l.pArrivee.x), (int)(s.position.y+l.pArrivee.y+10));
+			
 
   		}  
   	}             
