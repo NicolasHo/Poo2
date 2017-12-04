@@ -48,6 +48,14 @@ class Point
 		return p;
 	}
 
+	public static Point sub(Point p1, Point p2)
+	{
+		Point p = new Point(0,0);
+		p.setX(p1.x-p2.x);
+		p.setY(p1.y-p2.y);
+		return p;
+	}
+
 	public static Point min2(Point p1, Point p2)
 	{
 		double x,y;

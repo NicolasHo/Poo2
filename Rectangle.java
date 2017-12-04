@@ -193,9 +193,13 @@ class Rectangle
 				t_max=Point.max3(t_max, p1, p2);
 			}
 		}
+		int j=0;
 
 		for (int i: remove)
-			ligne.remove(i);
+		{
+			ligne.remove((i-j));
+			j++;
+		}
 		if (t_min!=null && t_max!=null) 
 		{
 			min.x=t_min.x;

@@ -10,8 +10,12 @@ public class Shape
 	public Point max;
 	public Point position;
 
+	private int sh;
+	private static int sh_g=0;
+
 	public Shape()
 	{
+		sh=sh_g++;
 		init_tmp();
 		setTop();
 		setBot();
@@ -19,25 +23,35 @@ public class Shape
 
 	public Shape(Vector<Ligne> l)
 	{
+		sh=sh_g++;
 		ligne=l;
 		rect=new Vector<Rectangle>();
 		rect.add(new Rectangle(l));
 		max=rect.elementAt(0).max;
-		position=rect.elementAt(0).min;
+		//position=rect.elementAt(0).min.clone();
+		System.out.println("x:"+rect.elementAt(0).min.x+" y:"+rect.elementAt(0).min.y);
+		//position=new Point(rect.elementAt(0).min.x,rect.elementAt(0).min.y);
+		position=new Point((-1)*rect.elementAt(0).min.x,(-1)*rect.elementAt(0).min.y);
 		setTop();
 		setBot();
 	}
 
+
+
 	public void test()
 	{
+		System.out.println("test :" + sh);
 		Vector<Rectangle> tmp=new Vector<Rectangle>();
 		Point moy= new Point(0,0);
 		for (Rectangle r:rect)
 			moy.moyenne(r.min, r.max);
 		moy.x=moy.x/rect.size();
 		moy.y=moy.y/rect.size();
+		int i=0;
 		for (Rectangle r:rect)
+		{
 			tmp.addAll(r.subdiviser_rect(moy));
+		}
 		rect=tmp;
 		setTop();
 		setBot();

@@ -40,8 +40,9 @@ class Ligne
 
 	public double abscisse(double a)
 	{
-		double coeffD=(max.x-min.x)/(max.y-min.y);
-		double val=(min.x+coeffD*(a-min.y));
+
+		double coeffD=(pArrivee.x-pDepart.x)/(pArrivee.y-pDepart.y);
+		double val=(pDepart.x+coeffD*(a-pDepart.y));
 		if (val<min.x)
 			val=min.x;
 		if (val>max.x)
@@ -51,8 +52,8 @@ class Ligne
 
 	public double ordonnee(double a)
 	{
-		double coeffD=(max.y-min.y)/(max.x-min.x);
-		double val=(min.y+coeffD*(a-min.x));
+		double coeffD=(pArrivee.y-pDepart.y)/(pArrivee.x-pDepart.x);
+		double val=(pDepart.y+coeffD*(a-pDepart.x));
 		if (val<min.y)
 			val=min.y;
 		if (val>max.y)
