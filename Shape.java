@@ -8,6 +8,7 @@ public class Shape
 	public Vector<Ligne> top; 
 	public Vector<Ligne> bot; 
 	public Point max;
+	public Point min;
 	public Point position;
 
 	private int sh;
@@ -15,10 +16,6 @@ public class Shape
 
 	public Shape()
 	{
-		sh=sh_g++;
-		init_tmp();
-		setTop();
-		setBot();
 	}
 
 	public Shape(Vector<Ligne> l)
@@ -27,7 +24,8 @@ public class Shape
 		ligne=l;
 		rect=new Vector<Rectangle>();
 		rect.add(new Rectangle(l));
-		max=rect.elementAt(0).max;
+		min=rect.elementAt(0).min.clone();
+		max=rect.elementAt(0).max.clone();
 		//position=rect.elementAt(0).min.clone();
 		System.out.println("x:"+rect.elementAt(0).min.x+" y:"+rect.elementAt(0).min.y);
 		//position=new Point(rect.elementAt(0).min.x,rect.elementAt(0).min.y);
@@ -35,8 +33,6 @@ public class Shape
 		setTop();
 		setBot();
 	}
-
-
 
 	public void test()
 	{
@@ -55,6 +51,11 @@ public class Shape
 		rect=tmp;
 		setTop();
 		setBot();
+	}
+
+	public void setP(double x, double y)
+	{
+		position.set((-1)*min.x+x,(-1)*min.y+y);
 	}
 
 	private void setTop()
@@ -127,34 +128,15 @@ public class Shape
 		return new_t;
 	}
 
-
-	private void init_tmp()
-	{
-		ligne=new Vector<Ligne>();
-		rect= new Vector<Rectangle>();
-		position= new Point(0,0);
-
-		ligne.add(new Ligne(0,0,200,70));
-		ligne.add(new Ligne(200,70,300,200));
-		ligne.add(new Ligne(300,200,50,150));
-		ligne.add(new Ligne(50,150,50,150));
-		ligne.add(new Ligne(50,150,0,0));
-
-		rect.add(new Rectangle(ligne));
-
-		max=rect.elementAt(0).max;	
-	}
-
 	public Shape Clone()
 	{
 		Shape s=new Shape();
 		s.ligne=Ligne.vect_clone(ligne);
 		s.rect=Rectangle.vect_clone(rect);
 		//s.creux=(Vector)creux.clone();
-		s.max=max.clone();
+		s.max=max;
+		s.min=min;
 		s.position=position.clone();
 		return s;
 	}
-
-	
 }

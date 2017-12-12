@@ -19,6 +19,12 @@ class Point
 		return y;
 	}
 
+	public void set(double x1, double y1)
+	{
+		x=x1;
+		y=y1;
+	}	
+
 	public void setX(double x1)
 	{
 		x=x1;

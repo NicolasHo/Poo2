@@ -4,12 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
+//benoit il va pas kiffer alarme faudra voir (mais j'en ai besoin)
+//Pq jdois tout mettre en static :(((
 
 class Parser
 {	
 	private String fichier;
 	public static Vector<Shape> formes = new Vector<Shape>();
+	private static boolean rester;
 
 
 	public Parser(String s)
@@ -29,17 +34,54 @@ class Parser
 		return p;
 	}
 
-
-	public static void traiter(String ligne, Point translate)
+	public static ArrayList<String> adapter(ArrayList<String> couple)
 	{
-
-		String[] couple = new String[100];
 		String[] copyCouple;
+		String copy;
+		rester=true;
+
+		for(int i=0;i<couple.size();i++)
+		{
+			if(couple.get(i).contains(String.valueOf('>')))//enleve /
+			{
+				couple.remove(i);
+				rester=false;
+			}
+			
+
+			else if(couple.get(i).contains(String.valueOf('"')))
+			{
+				copy=couple.get(i).substring(0,couple.get(i).indexOf('"'));
+				couple.set(i,copy);
+			}
+
+			else if(couple.get(i).contains("e"))//remplace les e par 0
+			{
+				copy=couple.get(i);
+				copyCouple=copy.split(",");
+				if(copyCouple[0].contains(String.valueOf('e')))
+					copyCouple[0]="0";
+				else
+					copyCouple[1]="0";
+
+				copy=copyCouple[0]+","+copyCouple[1];
+				couple.set(i,copy);
+			}
+
+
+
+		}
+
+		return couple;
+	}
+
+
+	public static void traiter(ArrayList<String> couple, int flag, Point translate)
+	{
 
 		Vector<Ligne> l = new Vector<Ligne>();
 		Ligne l2;
 		Shape s;
-		int flag=0;
 		boolean avancer=false;
 		Point origine = new Point(0,0);
 		Point origineDepart;
@@ -49,81 +91,52 @@ class Parser
 		Point tireur2 = new Point(0,0);
 		Point tmp;
 
-		couple=ligne.split(" ");
-
-		for(int i=0;i<couple.length;i++)
+		for(int a=0;a<couple.size();a++)
 		{
-			if(couple[i].contains(String.valueOf('/')))//enleve /
-			{
-				couple=Arrays.copyOf(couple,couple.length-1);
-			}
-
-			else if (couple[i].contains(String.valueOf('"')))
-			{
-				couple[i]=couple[i].substring(0,couple[i].indexOf('"'));
-			}
-
-			else if(couple[i].contains(String.valueOf('e')))//remplace les e par 0
-			{
-				copyCouple=new String[2];
-				copyCouple=couple[i].split(",");
-				if(copyCouple[0].contains(String.valueOf('e')))
-					copyCouple[0]="0";
-				else
-					copyCouple[1]="0";
-
-				couple[i]=copyCouple[0]+","+copyCouple[1];
-			}
-
+			//System.out.println(couple.get(a));
 		}
 
-		for(int a=0;a<couple.length;a++)
-		{
-			System.out.println(couple[a]);
-		}
-
-		origineDepart=Point.add(translate,convertir(couple[0]));
+		origineDepart=Point.add(translate,convertir(couple.get(0)));
 
 		l2=new Ligne(ancien,ancien,ancien,ancien);
 		l.add(l2);
-		flag=1;
 
-		for(int i=1;i<couple.length;i++)
+		for(int i=1;i<couple.size();i++)
 		{
-			if(couple[i].contains(String.valueOf('m')) || couple[i].contains(String.valueOf('l')))
+			if(couple.get(i).contains("m") || couple.get(i).contains("l"))
 			{
 				flag=1;
 				avancer=true;
-				if(couple[i].contains(String.valueOf('m')))
+				if(couple.get(i).contains("m"))
 				{
-					origine = convertir(couple[i+1]);
+					origine = convertir(couple.get(i+1));
 				}
 			}
 			
-			else if(couple[i].contains(String.valueOf('c')))
+			else if(couple.get(i).contains("c"))
 			{
 				flag=2;
 				avancer=true;
 			}
 
-			else if(couple[i].contains(String.valueOf('M')) || couple[i].contains(String.valueOf('L')))
+			else if(couple.get(i).contains("M") || couple.get(i).contains("L"))
 			{
 				flag=3;
 				avancer=true;
-				if(couple[i].contains(String.valueOf('M')))
+				if(couple.get(i).contains("M"))
 				{
-					tmp = Point.add(convertir(couple[i+1]),translate);
+					tmp = Point.add(convertir(couple.get(i+1)),translate);
 					origine = Point.sub(tmp,origine);
 				}
 			}
 			
-			else if(couple[i].contains(String.valueOf('C')))
+			else if(couple.get(i).contains("C"))
 			{
 				flag=4;
 				avancer=true;
 			}
 			
-			else if(couple[i].contains(String.valueOf('z')))
+			else if(couple.get(i).contains("z"))
 			{
 				flag=5;
 				avancer=true;
@@ -135,12 +148,13 @@ class Parser
 				avancer=false;	
 			}
 
+			//System.out.println(flag);
 
 			switch(flag)
 			{
 				case 1:
 			
-					nouveau=Point.add(ancien,convertir(couple[i]));
+					nouveau=Point.add(ancien,convertir(couple.get(i)));
 					l2=new Ligne(ancien,nouveau,ancien,nouveau);
 
 					l.add(l2);
@@ -149,11 +163,11 @@ class Parser
 					break;
 
 				case 2:
-					tireur1=Point.add(ancien,convertir(couple[i]));
+					tireur1=Point.add(ancien,convertir(couple.get(i)));
 					i++;
-					tireur2=Point.add(ancien,convertir(couple[i]));
+					tireur2=Point.add(ancien,convertir(couple.get(i)));
 					i++;
-					nouveau=Point.add(ancien,convertir(couple[i]));
+					nouveau=Point.add(ancien,convertir(couple.get(i)));
 
 					l2=new Ligne(ancien,nouveau,tireur1,tireur2);
 					l.add(l2);
@@ -163,7 +177,7 @@ class Parser
 
 				case 3:
 			
-					tmp=Point.add(translate,convertir(couple[i]));
+					tmp=Point.add(translate,convertir(couple.get(i)));
 					nouveau=Point.sub(tmp,origineDepart);
 
 					l2=new Ligne(ancien,nouveau,ancien,nouveau);
@@ -174,15 +188,15 @@ class Parser
 					break;
 				case 4:
 
-					tmp=Point.add(translate,convertir(couple[i]));
+					tmp=Point.add(translate,convertir(couple.get(i)));
 					tireur1=Point.sub(tmp,origineDepart);
 					i++;
 
-					tmp=Point.add(translate,convertir(couple[i]));
+					tmp=Point.add(translate,convertir(couple.get(i)));
 					tireur2=Point.sub(tmp,origineDepart);
 					i++;
 
-					tmp=Point.add(translate,convertir(couple[i]));
+					tmp=Point.add(translate,convertir(couple.get(i)));
 					nouveau=Point.sub(tmp,origineDepart);
 
 					l2=new Ligne(ancien,nouveau,tireur1,tireur2);
@@ -192,7 +206,7 @@ class Parser
 					break;
 				case 5:
 					
-					if(i<couple.length && !(couple[i].contains(String.valueOf('m'))))
+					if(i<couple.size() && !(couple.get(i).contains("m")))
 					{
 						l2=new Ligne(ancien,origine,ancien,origine);
 						l.add(l2);
@@ -201,7 +215,7 @@ class Parser
 					else
 						i--;
 
-					if(i==(couple.length-1))
+					if(i==(couple.size()-1))
 					{
 						l2=new Ligne(ancien,origine,ancien,origine);
 						l.add(l2);
@@ -226,12 +240,22 @@ class Parser
 		Point translateLocal = new Point(0,0);
 		Point translate = new Point(0,0);
 		Point origine = new Point(0,0);
+		Point premier;
+		Point deuxieme = new Point(0,0);
+		Point test;
+
 		int lettre;
+		int taille;
+		int flag=1;
 		String ligne;
 		char[] mot = new char [8];
 		int alarme=0;
 		String[] copyCouple;
 		String[] buf = new String[100];
+		ArrayList<String> couple = new ArrayList<String>(0);
+		String[] mega = new String[1000];
+		rester=true;
+
 
 		try
 		{
@@ -245,7 +269,6 @@ class Parser
 		{
 			if(lettre=='<' && br.read()=='g')
 			{
-				
 				while ((lettre=br.read()) != -1)
 				{
 					alarme--;
@@ -269,13 +292,68 @@ class Parser
 					}
 
 					if(lettre=='<')
-					{
 						alarme=2;
-					}
+					
 
 
 					if(alarme==1 && lettre=='g')//alors on entre dans un vrai groupe
 					{
+						couple.clear();
+						taille=0;
+						premier=new Point(0,0);
+						while((lettre=br.read()) != -1)
+						{
+							if(lettre=='g' && br.read()=='>')//sors du groupe
+							{
+								traiter(couple,flag,translateGroupe);
+								flag=1;
+								break;
+							}
+
+							if(lettre=='t')//modifie le translate du groupe
+							{
+								br.read(mot,0,5);
+								if(mot[0]=='r' && mot[1]=='a' && mot[2]=='n' && mot[3]=='s' && mot[4]=='l')
+								{
+									ligne=br.readLine();
+
+									buf=ligne.split("\\(");
+									buf=buf[1].split("\\)");
+									translateGroupe=Point.add(translateGroupe,convertir(buf[0]));
+								}
+							}
+
+							if(lettre=='d')
+							{
+								br.read(mot,0,4);
+								if(mot[0]=='=' && mot[1]=='"' && (mot[2]=='m' || mot[2]=='M') && mot[3]==' ')
+								{
+									if(mot[2]=='M')
+										flag=3;
+
+									ligne=br.readLine();
+									copyCouple=ligne.split(" ");
+									couple.addAll((List<String>) Arrays.asList(copyCouple));
+									couple=adapter(couple);
+
+									deuxieme=convertir(couple.get(taille));
+									test=Point.sub(deuxieme,premier);
+									premier=convertir(couple.get(0));
+
+									couple.set(taille,(String.valueOf(test.x)+','+String.valueOf(test.y)));
+
+									if(taille!=0)
+									{
+										couple.add(taille,"m");
+										taille++;
+									}
+
+
+									taille+=copyCouple.length;
+			
+								}
+							}
+						}
 					}
 
 					if(alarme==1 && lettre=='p')//alors on entre dans un path donc une forme
@@ -302,17 +380,24 @@ class Parser
 
 						br.reset();
 						translate=Point.add(translateGroupe,translateLocal);
-						System.out.println(translate.affiche());
 
-						while((lettre=br.read()) != '>')//tant que c'est pas la fin de path
+						while((lettre=br.read()) != '>' && rester)//tant que c'est pas la fin de path
 						{
 							if(lettre=='d')
 							{
 								br.read(mot,0,4);
-								if(mot[0]=='=' && mot[1]=='"' && mot[2]=='m' && mot[3]==' ')
+								if(mot[0]=='=' && mot[1]=='"' && (mot[2]=='m' || mot[2]=='M') && mot[3]==' ')
 								{
+									if(mot[2]=='M')
+										flag=3;
+
+									couple.clear();
 									ligne=br.readLine();
-									traiter(ligne,translate);
+									couple.addAll((List<String>) Arrays.asList(ligne.split(" ")));
+									couple=adapter(couple);
+									traiter(couple,flag,translate);
+									flag=1;
+
 								}
 							}
 						}
