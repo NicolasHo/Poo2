@@ -21,9 +21,9 @@ public class Shape
 	public Shape(Vector<Ligne> l)
 	{
 		sh=sh_g++;
-		ligne=l;
+		ligne=Ligne.conv_curve(l);
 		rect=new Vector<Rectangle>();
-		rect.add(new Rectangle(l));
+		rect.add(new Rectangle(ligne));
 		min=rect.elementAt(0).min.clone();
 		max=rect.elementAt(0).max.clone();
 		//position=rect.elementAt(0).min.clone();

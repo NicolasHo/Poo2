@@ -98,6 +98,18 @@ class Point
 		return new Point(x,y);
 	}
 
+	public static Point convertir(String s)
+	{
+		String[] valeurs = new String[2];
+		valeurs=s.split(",");
+
+		Double x = new Double(valeurs[0]);
+		Double y = new Double(valeurs[1]);
+		
+		Point p=new Point(x,y);
+		return p;
+	}
+
 	public static Point max3(Point p1, Point p2, Point p3)
 	{
 		if(p1==null)

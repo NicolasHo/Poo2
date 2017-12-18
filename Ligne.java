@@ -85,4 +85,37 @@ class Ligne
 			l.add(ligne.clone());
 		return l;
 	}
+
+	public static Vector<Ligne> setCurve(Ligne l)
+	{
+		double t=0.0;
+		double dx,ax,dy,ay;
+		Vector<Ligne> vect_l=new Vector<Ligne>();
+		dx =l.pArrivee.x;
+		dy =l.pArrivee.y;
+		for(t=0.05;t<=1;t+=0.05)
+		{
+			ax =(t*t*t)*l.pDepart.x+3*t*t*(1-t)*l.tireur1.x+3*t*(1-t)*(1-t)*l.tireur2.x+(1-t)*(1-t)*(1-t)*l.pArrivee.x;
+			ay =(t*t*t)*l.pDepart.y+3*t*t*(1-t)*l.tireur1.y+3*t*(1-t)*(1-t)*l.tireur2.y+(1-t)*(1-t)*(1-t)*l.pArrivee.y;
+			vect_l.add(new Ligne(new Point(dx,dy),new Point(ax,ay)));
+			dx=ax;
+			dy=ay;
+		}
+		return vect_l;
+	}
+
+	public static Vector<Ligne> conv_curve(Vector<Ligne> lignes)
+	{		
+		Vector<Ligne> vect_l=new Vector<Ligne>();
+		for (Ligne l:lignes) 
+		{
+			if(l.tireur1!=null && l.tireur2!=null)
+				vect_l.addAll(setCurve(l));
+			else
+				vect_l.add(l);
+		}
+		return vect_l;
+		
+	} 
 }
+

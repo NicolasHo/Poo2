@@ -7,34 +7,23 @@ import java.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-//benoit il va pas kiffer alarme faudra voir (mais j'en ai besoin)
-//Pq jdois tout mettre en static :(((
+
 
 class Parser
 {	
 	private String fichier;
-	public static Vector<Shape> formes = new Vector<Shape>();
-	private static boolean rester;
+	public Vector<Shape> formes;
+	private boolean rester;
 
 
 	public Parser(String s)
 	{
 		fichier=s;
+		formes = new Vector<Shape>();
 	}
 
-	private static Point convertir(String s)
-	{
-		String[] valeurs = new String[2];
-		valeurs=s.split(",");
 
-		Double x = new Double(valeurs[0]);
-		Double y = new Double(valeurs[1]);
-		
-		Point p=new Point(x,y);
-		return p;
-	}
-
-	public static ArrayList<String> adapter(ArrayList<String> couple)
+	public ArrayList<String> adapter(ArrayList<String> couple)
 	{
 		String[] copyCouple;
 		String copy;
@@ -76,7 +65,7 @@ class Parser
 	}
 
 
-	public static void traiter(ArrayList<String> couple, int flag, Point translate)
+	public void traiter(ArrayList<String> couple, int flag, Point translate)
 	{
 
 		Vector<Ligne> l = new Vector<Ligne>();
@@ -96,7 +85,7 @@ class Parser
 			//System.out.println(couple.get(a));
 		}
 
-		origineDepart=Point.add(translate,convertir(couple.get(0)));
+		origineDepart=Point.add(translate,Point.convertir(couple.get(0)));
 
 		l2=new Ligne(ancien,ancien,ancien,ancien);
 		l.add(l2);
@@ -109,7 +98,7 @@ class Parser
 				avancer=true;
 				if(couple.get(i).contains("m"))
 				{
-					origine = convertir(couple.get(i+1));
+					origine = Point.convertir(couple.get(i+1));
 				}
 			}
 			
@@ -125,7 +114,7 @@ class Parser
 				avancer=true;
 				if(couple.get(i).contains("M"))
 				{
-					tmp = Point.add(convertir(couple.get(i+1)),translate);
+					tmp = Point.add(Point.convertir(couple.get(i+1)),translate);
 					origine = Point.sub(tmp,origine);
 				}
 			}
@@ -148,14 +137,14 @@ class Parser
 				avancer=false;	
 			}
 
-			//System.out.println(flag);
-
 			switch(flag)
 			{
 				case 1:
 			
-					nouveau=Point.add(ancien,convertir(couple.get(i)));
+					nouveau=Point.add(ancien,Point.convertir(couple.get(i)));
 					l2=new Ligne(ancien,nouveau,ancien,nouveau);
+					//l2=new Ligne(ancien,nouveau,null,null);
+
 
 					l.add(l2);
 					ancien=nouveau;
@@ -163,11 +152,11 @@ class Parser
 					break;
 
 				case 2:
-					tireur1=Point.add(ancien,convertir(couple.get(i)));
+					tireur1=Point.add(ancien,Point.convertir(couple.get(i)));
 					i++;
-					tireur2=Point.add(ancien,convertir(couple.get(i)));
+					tireur2=Point.add(ancien,Point.convertir(couple.get(i)));
 					i++;
-					nouveau=Point.add(ancien,convertir(couple.get(i)));
+					nouveau=Point.add(ancien,Point.convertir(couple.get(i)));
 
 					l2=new Ligne(ancien,nouveau,tireur1,tireur2);
 					l.add(l2);
@@ -177,10 +166,11 @@ class Parser
 
 				case 3:
 			
-					tmp=Point.add(translate,convertir(couple.get(i)));
+					tmp=Point.add(translate,Point.convertir(couple.get(i)));
 					nouveau=Point.sub(tmp,origineDepart);
 
 					l2=new Ligne(ancien,nouveau,ancien,nouveau);
+					//l2=new Ligne(ancien,nouveau,null,null);
 
 					l.add(l2);
 					ancien=nouveau;
@@ -188,15 +178,15 @@ class Parser
 					break;
 				case 4:
 
-					tmp=Point.add(translate,convertir(couple.get(i)));
+					tmp=Point.add(translate,Point.convertir(couple.get(i)));
 					tireur1=Point.sub(tmp,origineDepart);
 					i++;
 
-					tmp=Point.add(translate,convertir(couple.get(i)));
+					tmp=Point.add(translate,Point.convertir(couple.get(i)));
 					tireur2=Point.sub(tmp,origineDepart);
 					i++;
 
-					tmp=Point.add(translate,convertir(couple.get(i)));
+					tmp=Point.add(translate,Point.convertir(couple.get(i)));
 					nouveau=Point.sub(tmp,origineDepart);
 
 					l2=new Ligne(ancien,nouveau,tireur1,tireur2);
@@ -208,6 +198,7 @@ class Parser
 					
 					if(i<couple.size() && !(couple.get(i).contains("m")))
 					{
+						//l2=new Ligne(ancien,origine,null,null);
 						l2=new Ligne(ancien,origine,ancien,origine);
 						l.add(l2);
 						ancien=origine;
@@ -218,6 +209,8 @@ class Parser
 					if(i==(couple.size()-1))
 					{
 						l2=new Ligne(ancien,origine,ancien,origine);
+						//l2=new Ligne(ancien,origine,null,null);
+
 						l.add(l2);
 					}
 
@@ -232,7 +225,7 @@ class Parser
 	}
 
 
-	public static void lire(String fic) throws IOException
+	public void lire() throws IOException
 	{
 		BufferedReader br=null;
 
@@ -256,15 +249,16 @@ class Parser
 		String[] mega = new String[1000];
 		rester=true;
 
-
 		try
 		{
-			br = new BufferedReader(new FileReader(fic));
+			br = new BufferedReader(new FileReader(fichier));
 		}
+
 		catch(FileNotFoundException exc)
 		{
 			System.out.println("Erreur d'ouverture");
 		}
+
 		while ((lettre=br.read()) != -1)
 		{
 			if(lettre=='<' && br.read()=='g')
@@ -281,7 +275,7 @@ class Parser
 							ligne=br.readLine();
 							buf=ligne.split("\\(");
 							buf=buf[1].split("\\)");
-							translateGroupe=convertir(buf[0]);
+							translateGroupe=Point.convertir(buf[0]);
 						}
 					}
 
@@ -298,6 +292,7 @@ class Parser
 
 					if(alarme==1 && lettre=='g')//alors on entre dans un vrai groupe
 					{
+						rester=true;
 						couple.clear();
 						taille=0;
 						premier=new Point(0,0);
@@ -305,6 +300,10 @@ class Parser
 						{
 							if(lettre=='g' && br.read()=='>')//sors du groupe
 							{
+								for(int a=0;a<couple.size();a++)
+								{
+									System.out.println(couple.get(a));
+								}
 								traiter(couple,flag,translateGroupe);
 								flag=1;
 								break;
@@ -319,7 +318,7 @@ class Parser
 
 									buf=ligne.split("\\(");
 									buf=buf[1].split("\\)");
-									translateGroupe=Point.add(translateGroupe,convertir(buf[0]));
+									translateGroupe=Point.add(translateGroupe,Point.convertir(buf[0]));
 								}
 							}
 
@@ -336,9 +335,9 @@ class Parser
 									couple.addAll((List<String>) Arrays.asList(copyCouple));
 									couple=adapter(couple);
 
-									deuxieme=convertir(couple.get(taille));
+									deuxieme=Point.convertir(couple.get(taille));
 									test=Point.sub(deuxieme,premier);
-									premier=convertir(couple.get(0));
+									premier=Point.convertir(couple.get(taille));
 
 									couple.set(taille,(String.valueOf(test.x)+','+String.valueOf(test.y)));
 
@@ -358,6 +357,7 @@ class Parser
 
 					if(alarme==1 && lettre=='p')//alors on entre dans un path donc une forme
 					{
+						rester=true;
 						translateLocal= new Point(0,0);
 						br.mark(8000);
 
@@ -373,7 +373,7 @@ class Parser
 
 									buf=ligne.split("\\(");
 									buf=buf[1].split("\\)");
-									translateLocal=convertir(buf[0]);
+									translateLocal=Point.convertir(buf[0]);
 								}
 							}
 						}
