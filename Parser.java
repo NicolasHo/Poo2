@@ -98,6 +98,7 @@ class Parser
 				avancer=true;
 				if(couple.get(i).contains("m"))
 				{
+			//		flag=6;
 					origine = Point.convertir(couple.get(i+1));
 				}
 			}
@@ -114,6 +115,7 @@ class Parser
 				avancer=true;
 				if(couple.get(i).contains("M"))
 				{
+			//		flag=6;
 					tmp = Point.add(Point.convertir(couple.get(i+1)),translate);
 					origine = Point.sub(tmp,origine);
 				}
@@ -215,6 +217,11 @@ class Parser
 					}
 
 					break;
+				case 6:	
+					nouveau=Point.add(ancien,Point.convertir(couple.get(i)));
+					ancien=nouveau;
+					break;
+
 				default:
 					System.out.println("Gros probleme");
 					break;

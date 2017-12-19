@@ -11,6 +11,9 @@ public class Shape
 	public Point min;
 	public Point position;
 
+	public int order;
+	public double taille;
+
 	private int sh;
 	private static int sh_g=0;
 
@@ -36,7 +39,7 @@ public class Shape
 
 	public void test()
 	{
-		System.out.println("test :" + sh);
+		//System.out.println("test :" + sh);
 		Vector<Rectangle> tmp=new Vector<Rectangle>();
 		Point moy= new Point(0,0);
 		for (Rectangle r:rect)

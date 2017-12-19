@@ -33,25 +33,36 @@ class Placement extends JPanel
 		s=vct_s;
 		show_point=false;
 		show_rect=false;
-		//s=order(vct_s);
+		order();
 	}
 
-	private Vector<Shape> order(Vector<Shape> vct_s)
+	private void order()
 	{
-		return vct_s;
-		/*
-		sh=new Vector<Shape>();
-		for(Shape shape: vct_s)
-			shape.order=shape.rect.elementAt(0).x*shape.rect.elementAt(0).y;
-		for (int i=0;i<vct_s.size();i++) 
+		int ord=0,id=-1;
+		double tmp;
+		Vector<Shape> vct_s= new Vector<Shape>();
+		for(Shape shape: s)
 		{
-			if () {
-				
-			}
+			shape.order=-1;
+			shape.taille=(shape.max.x-shape.min.x)*(shape.max.y-shape.min.y);
 		}
 
-		return sh;
-		*/
+		for (int i=0;i<s.size();i++) 
+		{
+			tmp=-1;
+			for (int j=0;j<s.size();j++) 
+			{
+				if (s.elementAt(j).order == -1 && tmp<s.elementAt(j).taille)
+				{
+					tmp=s.elementAt(j).taille;
+					id=j;
+				}
+			}
+			s.elementAt(id).order=ord++;
+			vct_s.add(s.elementAt(id));
+		}
+		s=vct_s;
+
 	}
 
 	public void setAlgo(int a)
@@ -98,6 +109,7 @@ class Placement extends JPanel
 			else
 				s=p.formes;
 
+			order();
 
 		  	for (Shape shape: s)
 	  			for (int i=0;i<3;i++)
@@ -118,9 +130,9 @@ class Placement extends JPanel
 	private void replace(Vector<Shape> vct_s, Shape sh)
 	{
   		double offset_x=99999999,offset_y=0;
-  		double height=(3543.0-(sh.max.y-sh.min.y)*1.5)/1000.0;
+  		double height=(3543.0-(sh.max.y-sh.min.y))/1400.0;
   		//double height=3543.0/6.0;
-  		for (int i=0;i<1000;i++) 
+  		for (int i=0;i<1400;i++) 
   		{
   			double tmp_x=0;
   			double tmp_y=height*i;
@@ -145,10 +157,9 @@ class Placement extends JPanel
 						for(Rectangle r1:shape.rect)
 						{
 							for(Rectangle r2: sh.rect)
-							{						
-
-								if ((shape.position.y+r1.min.y)<(height*i+r2.max.y)
-									&& (shape.position.y+r1.max.y)>height*i+r2.min.y) 
+							{			
+								if ((shape.position.y+r1.min.y)<(height*i-sh.min.y+r2.max.y)
+									&& (shape.position.y+r1.max.y)>height*i-sh.min.y+r2.min.y) 
 								{
 
 									if(tmp_x<(shape.position.x+r1.max.x))

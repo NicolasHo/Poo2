@@ -36,7 +36,7 @@ public class Fenetre extends JFrame {
 
 	public Fenetre()
 	{
-		this.setTitle("Ma première fenêtre Java");
+		this.setTitle("Projet POO2");
 		this.setSize(1620, 737);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
@@ -52,8 +52,8 @@ public class Fenetre extends JFrame {
 		JLabel label1 = new JLabel("Algorithme",JLabel.CENTER);
 		JLabel label2 = new JLabel("Debug",JLabel.CENTER);
 
-		JButton bouton1 = new JButton("Nouveau un fichier");
-		JButton bouton2 = new JButton("Ajouter un fichier");
+		JButton bouton1 = new JButton("Nouveau fichier");
+//		JButton bouton2 = new JButton("Ajouter un fichier");
 		JCheckBox rect = new JCheckBox("Rectangles");
 		JCheckBox point = new JCheckBox("Points");
 		JCheckBox limit = new JCheckBox("limites");
@@ -70,7 +70,7 @@ public class Fenetre extends JFrame {
 				drawing.setFic(path,false);
 			}
 		});
-
+/*
 		bouton2.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent event)
@@ -79,7 +79,7 @@ public class Fenetre extends JFrame {
 				drawing.setFic(path,true);
 			}
 		});
-
+*/
 
 
 		JRadioButton simple = new JRadioButton("Simple (stable)");
@@ -183,25 +183,25 @@ public class Fenetre extends JFrame {
 		cell1.add(bouton1, gbc);
 		gbc.gridy = 1;
 		cell1.add( Box.createVerticalGlue(),gbc);
+		//gbc.gridy = 2;
+		//cell1.add(bouton2, gbc);
 		gbc.gridy = 2;
-		cell1.add(bouton2, gbc);
+		cell1.add( Box.createVerticalGlue(),gbc);
 		gbc.gridy = 3;
-		cell1.add( Box.createVerticalGlue(),gbc);
-		gbc.gridy = 4;
 		cell1.add(label1, gbc);
-		gbc.gridy = 5;
+		gbc.gridy = 4;
 		cell1.add(simple, gbc);
-		gbc.gridy = 6;
+		gbc.gridy = 5;
 		cell1.add(dev, gbc);
-		gbc.gridy = 7;
+		gbc.gridy = 6;
 		cell1.add( Box.createVerticalGlue(),gbc);
-		gbc.gridy = 8;
+		gbc.gridy = 7;
 		cell1.add(label2, gbc);
-		gbc.gridy = 9;
+		gbc.gridy = 8;
 		cell1.add(rect, gbc);
-		gbc.gridy = 10;
+		gbc.gridy = 9;
 		cell1.add(point, gbc);
-		gbc.gridy = 11;
+		gbc.gridy = 10;
 		cell1.add(limit, gbc);
 
 		this.setContentPane(content);
